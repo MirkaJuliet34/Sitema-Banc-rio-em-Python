@@ -10,7 +10,6 @@
 - **Tratamento de exceções:** Adicionei tratamento de exceções para lidar com possíveis erros de entrada do usuário, como inserir uma letra em vez de um número ao solicitar um valor.
 - **Refatoração de código:** Evitei as repetições de código, especialmente ao exibir mensagens de erro.
 - **Melhoria na legibilidade:** Usei constantes em maiúsculas para os valores que não mudam, para tornar o código mais legível e fácil de manter.
-- **Adição de comentários:** Adicione comentários para explicar o que cada parte do código faz, especialmente se for complexo.
 
 ##
 
