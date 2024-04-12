@@ -1,59 +1,65 @@
-menu = """
-[d] Depositar
-[s] Sacar
-[e] Extrato
-[q] Sair
+import uuid
 
-=> """
-
-saldo = 0
-limite = 500
-extrato = ""
-numero_saques = 0
-LIMITE_SAQUES = 3
-
-while True:
-    try:
-        opcao = input(menu).strip().lower()  # Remover espaços em branco e converter para minúsculas
-
-        if opcao == "d":
-            valor = float(input("Informe o valor do depósito: "))
-            if valor <= 0:
-                raise ValueError("Valor do depósito deve ser maior que zero.")
-            saldo += valor
-            extrato += f"Depósito: R$ {valor:.2f}\n"
-
-        elif opcao == "s":
-            valor = float(input("Informe o valor do saque: "))
-            if valor <= 0:
-                raise ValueError("Valor do saque deve ser maior que zero.")
-            
-            if valor > saldo:
-                raise ValueError("Operação falhou! Você não tem saldo suficiente.")
-            
-            if valor > limite:
-                raise ValueError("Operação falhou! O valor do saque excede o limite.")
-            
-            if numero_saques >= LIMITE_SAQUES:
-                raise ValueError("Operação falhou! Número máximo de saques excedido.")
-
-            saldo -= valor
-            extrato += f"Saque: R$ {valor:.2f}\n"
-            numero_saques += 1
-
-        elif opcao == "e":
-            print("\n================ EXTRATO ================")
-            print("Não foram realizadas movimentações." if not extrato else extrato)
-            print(f"\nSaldo: R$ {saldo:.2f}")
-            print("==========================================")
-
-        elif opcao == "q":
-            break
-
+class ContaBancaria:
+    def __init__(self, nome, saldo_inicial=0):
+        self.nome = nome
+        self.saldo = saldo_inicial
+        self.numero_conta = uuid.uuid4().hex  # Gerar um número de conta único
+    
+    def deposito(self, valor):
+        if valor > 0:
+            self.saldo += valor
+            print(f'Depósito de R${valor} realizado. Saldo atual: R${self.saldo}')
         else:
-            print("Operação inválida, por favor selecione novamente a operação desejada.")
+            print("O valor do depósito deve ser maior que zero.")
+    
+    def saque(self, valor):
+        if 0 < valor <= self.saldo:
+            self.saldo -= valor
+            print(f'Saque de R${valor} realizado. Saldo atual: R${self.saldo}')
+        else:
+            print("Saldo insuficiente para realizar o saque ou valor inválido.")
+    
+    def saldo_disponivel(self):
+        print(f'Saldo disponível: R${self.saldo}')
 
-    except ValueError as ve:
-        print(f"Erro: {ve}")
-    except Exception as e:
-        print(f"Ocorreu um erro inesperado: {e}")
+
+# Vamos criar uma instância de ContaBancaria para testar o funcionamento
+conta_teste = ContaBancaria("Fulano", 1000)
+conta_teste.saldo_disponivel()
+conta_teste.deposito(500)
+conta_teste.saque(200)
+conta_teste.saldo_disponivel()
+
+
+class Banco:
+    def __init__(self):
+        self.contas = {}  # Dicionário para armazenar as contas
+    
+    def criar_conta(self, nome, saldo_inicial=0):
+        nova_conta = ContaBancaria(nome, saldo_inicial)
+        self.contas[nova_conta.numero_conta] = nova_conta
+        print(f'Conta criada para {nome} com sucesso. Número da conta: {nova_conta.numero_conta}')
+    
+    def obter_conta(self, numero_conta):
+        return self.contas.get(numero_conta)
+    
+    def realizar_transferencia(self, conta_origem, conta_destino, valor):
+        if conta_origem.saldo >= valor:
+            conta_origem.saque(valor)
+            conta_destino.deposito(valor)
+            print("Transferência realizada com sucesso.")
+        else:
+            print("Saldo insuficiente para realizar a transferência.")
+
+
+# Testando o funcionamento do sistema com o banco de dados
+banco = Banco()
+banco.criar_conta("Fulano", 1000)
+banco.criar_conta("Ciclano", 500)
+
+conta_fulano = banco.obter_conta(conta_teste.numero_conta)
+conta_ciclano = banco.obter_conta("Número da conta de Ciclano")  # Você precisará do número real da conta
+
+banco.realizar_transferencia(conta_fulano, conta_ciclano, 200)
+
