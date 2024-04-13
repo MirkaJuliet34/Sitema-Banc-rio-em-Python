@@ -35,6 +35,10 @@
 - Em seguida, obtivemos referências às contas de "Fulano" e "Ciclano" usando o método obter_conta.
 - Finalmente, testamos o método realizar_transferencia transferindo fundos da conta de "Fulano" para a conta de "Ciclano".
 
+**Modelando o Sistema Bancário em POO com Python:**
+
+A classe **BancoDados** é usada para simular o banco de dados de contas bancárias. As contas são armazenadas em um dicionário, onde a chave é o número da conta e o valor é a instância da classe ContaBancaria. As operações de criação de conta, obtenção de conta e realização de transferência são adaptadas para interagir com esse banco de dados simulado.
+
 
 <br />
 
